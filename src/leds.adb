@@ -74,7 +74,7 @@ package body Leds is
    begin
       --  Enable clock for GPIO-D (leds) and GPIO-A (button)
  
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOD or RCC_AHB1ENR_GPIOA;
+      RCC.AHBENR := RCC.AHBENR or RCC_AHB1ENR_GPIOD or RCC_AHB1ENR_GPIOA;
  
       --  And for SYSCFGEN
  

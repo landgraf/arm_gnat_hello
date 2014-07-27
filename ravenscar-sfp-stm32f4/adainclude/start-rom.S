@@ -27,7 +27,7 @@
 #############################################################################
 
 	.syntax unified
-	.cpu cortex-m3
+	.cpu cortex-m4
 	.thumb
 
 	/* This is the initial vector table and also the one that is used by
@@ -46,6 +46,16 @@ __vectors0:
 	.thumb_func
 	.globl _start_rom
 _start_rom:
+        /* Enable FPU */
+        movw     r0,#0xED88
+        movt     r0,#0xE000
+        ldr      r1,[r0]
+        orr      r1,r1,#(0xF << 20)
+        str      r1,[r0]
+
+        /* Wait for store to complete and reset pipeline with FPU enabled  */
+        dsb
+        isb
 
 	/* Copy .data */
 	movw	r0,#:lower16:__data_start

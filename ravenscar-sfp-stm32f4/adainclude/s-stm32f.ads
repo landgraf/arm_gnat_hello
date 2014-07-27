@@ -51,13 +51,12 @@ package System.STM32F4 is
 
    APB1_Peripheral_Base : constant := Peripheral_Base;
    APB2_Peripheral_Base : constant := Peripheral_Base + 16#0001_0000#;
-   AHB1_Peripheral_Base : constant := Peripheral_Base + 16#0002_0000#;
-   AHB2_Peripheral_Base : constant := Peripheral_Base + 16#1000_0000#;
+   AHB_Peripheral_Base : constant := Peripheral_Base + 16#0001_8000#;
 
-   GPIOB_Base  : constant := AHB1_Peripheral_Base + 16#0400#;
-   FLASH_Base  : constant := AHB1_Peripheral_Base + 16#3C00#;
-   USART1_Base : constant := APB2_Peripheral_Base + 16#1000#;
-   RCC_Base    : constant := AHB1_Peripheral_Base + 16#3800#;
+   GPIOB_Base  : constant := APB2_Peripheral_Base + 16#0C00#;
+   FLASH_Base  : constant := 16#4002_2000#;
+   USART1_Base : constant := APB2_Peripheral_Base + 16#3800#;
+   RCC_Base    : constant := 16#4002_1000#;
    PWR_Base    : constant := APB1_Peripheral_Base + 16#7000#;
 
    ---------------------------------
@@ -65,40 +64,16 @@ package System.STM32F4 is
    ---------------------------------
 
    type RCC_Registers is record
-      CR             : Word;  --  RCC clock control register at 16#00#
-      PLLCFGR        : Word;  --  RCC PLL configuration register at 16#04#
-      CFGR           : Word;  --  RCC clock configuration register at 16#08#
-      CIR            : Word;  --  RCC clock interrupt register at 16#0C#
-      AHB1RSTR       : Word;  --  RCC AHB1 peripheral reset register at 16#10#
-      AHB2RSTR       : Word;  --  RCC AHB2 peripheral reset register at 16#14#
-      AHB3RSTR       : Word;  --  RCC AHB3 peripheral reset register at 16#18#
-      Reserved_0     : Word;  --  Reserved at 16#1C#
-      APB1RSTR       : Word;  --  RCC APB1 peripheral reset register at 16#20#
-      APB2RSTR       : Word;  --  RCC APB2 peripheral reset register at 16#24#
-      Reserved_1     : Word;  --  Reserved at 16#28#
-      Reserved_2     : Word;  --  Reserved at 16#2c#
-      AHB1ENR        : Word;  --  RCC AHB1 peripheral clock register at 16#30#
-      AHB2ENR        : Word;  --  RCC AHB2 peripheral clock register at 16#34#
-      AHB3ENR        : Word;  --  RCC AHB3 peripheral clock register at 16#38#
-      Reserved_3     : Word;  --  Reserved at 16#0C#
-      APB1ENR        : Word;  --  RCC APB1 peripheral clock enable at 16#40#
-      APB2ENR        : Word;  --  RCC APB2 peripheral clock enable at 16#44#
-      Reserved_4     : Word;  --  Reserved at 16#48#
-      Reserved_5     : Word;  --  Reserved at 16#4c#
-      AHB1LPENR      : Word;  --  RCC AHB1 periph. low power clk en. at 16#50#
-      AHB2LPENR      : Word;  --  RCC AHB2 periph. low power clk en. at 16#54#
-      AHB3LPENR      : Word;  --  RCC AHB3 periph. low power clk en. at 16#58#
-      Reserved_6     : Word;  --  Reserved, 16#5C#
-      APB1LPENR      : Word;  --  RCC APB1 periph. low power clk en. at 16#60#
-      APB2LPENR      : Word;  --  RCC APB2 periph. low power clk en. at 16#64#
-      Reserved_7     : Word;  --  Reserved at 16#68#
-      Reserved_8     : Word;  --  Reserved at 16#6C#
-      BDCR           : Word;  --  RCC Backup domain control register at 16#70#
-      CSR            : Word;  --  RCC clock control/status register at 16#74#
-      Reserved_9     : Word;  --  Reserved at 16#78#
-      Reserved_10    : Word;  --  Reserved at 16#7C#
-      SSCGR          : Word;  --  RCC spread spectrum clk gen. reg. at 16#80#
-      PLLI2SCFGR     : Word;  --  RCC PLLI2S configuration register at 16#84#
+      CR        : Word;  --  RCC clock control register at 16#00#
+      CFGR      : Word;  --  RCC clock configuration register at 16#04#
+      CIR       : Word;  --  RCC clock interrupt register at 16#08#
+      APB2RSTR  : Word;  --  RCC APB2 peripheral reset register at 16#0C#
+      APB1RSTR  : Word;  --  RCC APB1 peripheral reset register at 16#10#
+      AHBENR    : Word;  --  RCC AHB1 peripheral clock register at 16#14#
+      APB2ENR   : Word;  --  RCC APB2 peripheral clock enable at 16#18#
+      APB1ENR   : Word;  --  RCC APB1 peripheral clock enable at 16#1C#
+      BDCR      : Word;  --  RCC Backup domain control register at 16#20#
+      CSR       : Word;  --  RCC clock control/status register at 16#24#
    end record;
 
    RCC : RCC_Registers with Volatile, Address => System'To_Address (RCC_Base);
@@ -113,15 +88,12 @@ package System.STM32F4 is
       CSSON      : constant Word := 2**19; -- Clock security system enable
       PLLON      : constant Word := 2**24; -- Main PLL enable
       PLLRDY     : constant Word := 2**25; -- Main PLL ready
-      PLLI2SON   : constant Word := 2**26; -- Main PLL enable
-      PLLI2SRDY  : constant Word := 2**27; -- Main PLL ready
    end RCC_CR;
 
    PLLSRC_HSE      : constant := 2**22; -- PLL source clock is HSE
 
    package RCC_CFGR is
       --  Constants for RCC CFGR register
-
       --  AHB prescaler
       HPRE_DIV1      : constant Word := 16#00#; -- AHB is SYSCLK
       HPRE_DIV2      : constant Word := 16#80#; -- AHB is SYSCLK / 2
@@ -216,8 +188,9 @@ package System.STM32F4 is
    PWR : PWR_Registers with Volatile, Import,
                             Address => System'To_Address (PWR_Base);
 
-   PWR_CR_VOS_HIGH      : constant Word := 2**14; -- Core voltage set to high
-   PWR_CSR_VOSRDY       : constant Word := 2**14; -- Regulator output ready
+   PWR_CR_VOS_HIGH      : constant Word := 0; -- Core voltage set to high
+   PWR_CSR_VOSRDY           : constant Word := 256 + 7;
+   --  PWR_CSR_VOSRDY       : constant Word := 0; -- Regulator output ready
 
    ---------------
    -- FLASH_ACR --

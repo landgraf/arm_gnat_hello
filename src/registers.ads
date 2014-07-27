@@ -10,10 +10,10 @@ package Registers is
  
    RCC_APB2ENR_SYSCFGEN : constant Word := 16#4000#;
  
-   GPIOD_Base           : constant := AHB1_Peripheral_Base + 16#0C00#;
-   GPIOA_Base           : constant := AHB1_Peripheral_Base + 16#0000#;
-   SYSCFG_Base          : constant := APB2_Peripheral_Base + 16#3800#;
-   EXTI_Base            : constant := APB2_Peripheral_Base + 16#3c00#;
+   GPIOD_Base           : constant := 16#4001_1400#;
+   GPIOA_Base           : constant := 16#4001_0800#;
+   SYSCFG_Base          : constant := APB2_Peripheral_Base + 16#3800#; -- FIXME Not implemented
+   EXTI_Base            : constant := APB2_Peripheral_Base + 16#3c00#; -- FIXME
  
    GPIOD : GPIO_Registers with
      Volatile,

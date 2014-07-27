@@ -63,7 +63,7 @@ procedure Setup_Pll is
    HSE_Bypass      : constant Boolean := False; -- don't bypass ext. resonator
    LSI_Enabled     : constant Boolean := True;  -- use low-speed internal clock
 
-   Activate_PLL    : constant Boolean := True;
+   Activate_PLL    : constant Boolean := False;
    Activate_PLLI2S : constant Boolean := False;
 
    pragma Assert ((if Activate_PLL then HSE_Enabled),
@@ -77,16 +77,16 @@ procedure Setup_Pll is
    PLLM_Value  : constant := 8;     -- divider in range 2 .. 63
    PLLN_Value  : constant := 336;   -- multiplier in range 192 .. 432
    PLLP_Value  : constant := 2;     -- divider may be 2, 4, 6 or 8
-   PLLQ_Value  : constant := 7;     -- multiplier in range 2 .. 15
+   --  PLLQ_Value  : constant := 7;     -- multiplier in range 2 .. 15
 
    PLLCLKIN    : constant PLLIN_Range  := HSECLK / PLLM_Value;
    PLLVC0      : constant PLLVC0_Range := PLLCLKIN * PLLN_Value;
    PLLCLKOUT   : constant PLLOUT_Range := PLLVC0 / PLLP_Value;
 
-   PLLM     : constant Word := PLLM_Value;
-   PLLN     : constant Word := PLLN_Value * 2**6;
-   PLLP     : constant Word := (PLLP_Value / 2 - 1) * 2**16;
-   PLLQ     : constant Word := PLLQ_Value * 2**24;
+   --  PLLM     : constant Word := PLLM_Value;
+   --  PLLN     : constant Word := PLLN_Value * 2**6;
+   --  PLLP     : constant Word := (PLLP_Value / 2 - 1) * 2**16;
+   --  PLLQ     : constant Word := PLLQ_Value * 2**24;
 
    HPRE     : constant Word := RCC_CFGR.HPRE_DIV1;
    PPRE1    : constant Word := RCC_CFGR.PPRE1_DIV4;
@@ -181,7 +181,7 @@ procedure Setup_Pll is
       --  Wait until voltage supply scaling has completed
 
       loop
-         exit when PWR.CSR and PWR_CSR_VOSRDY;
+         exit when PWR.CSR = 0;
       end loop;
 
       --  Setup internal clock and wait for HSI stabilisation.
@@ -217,14 +217,15 @@ procedure Setup_Pll is
 
       --  Activate PLL if enabled
 
-      if Activate_PLL then
-         RCC.PLLCFGR := PLLQ or PLLSRC_HSE or PLLP or PLLN or PLLM;
-         Set (RCC.CR, RCC_CR.PLLON);
+      --  if Activate_PLL then
+         --  RCC.PLLCFGR := PLLQ or PLLSRC_HSE or PLLP or PLLN or PLLM;
+         --  Set (RCC.CR, RCC_CR.PLLON);
 
-         loop
-            exit when RCC.CR and RCC_CR.PLLRDY;
-         end loop;
-      end if;
+         --  loop
+         --     exit when RCC.CR and RCC_CR.PLLRDY;
+         --  end loop;
+      --  null;
+      --  end if;
 
       --  Configure flash
       --  Must be done before increasing the frequency, otherwise the CPU
@@ -270,7 +271,7 @@ procedure Setup_Pll is
       Reset (RCC.CR, RCC_CR.HSEON or RCC_CR.CSSON or RCC_CR.PLLON);
 
       --  Reset PLL configuration register
-      RCC.PLLCFGR := 16#2400_3010#;
+      --  RCC.PLLCFGR := 16#2400_3010#;
 
       --  Reset HSE bypass bit
       Reset (RCC.CR, RCC_CR.HSEBYP);
@@ -291,7 +292,7 @@ procedure Setup_Pll is
       BRR          : Bits_16;
    begin
       RCC.APB2ENR := RCC.APB2ENR or RCC_APB2ENR_USART1;
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOB;
+      RCC.AHBENR := RCC.AHBENR or RCC_AHB1ENR_GPIOB;
 
       GPIOB.MODER   (6 .. 7) := (Mode_AF,     Mode_AF);
       GPIOB.OSPEEDR (6 .. 7) := (Speed_50MHz, Speed_50MHz);
