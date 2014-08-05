@@ -27,7 +27,7 @@
 #############################################################################
 
 	.syntax unified
-	.cpu cortex-m3
+	.cpu cortex-m4
 	.thumb
 
 	/* Vector table installed by the ravenscar runtime. According to

@@ -2,7 +2,7 @@ with Leds;          use Leds;
 with Ada.Real_Time; use Ada.Real_Time;
 procedure Main is
  
-   Period     : constant Time_Span := Milliseconds (75);  -- arbitrary
+   Period     : constant Time_Span := Milliseconds (100);  -- arbitrary
    Next_Start : Time := Clock;
  
    Next_LED   : LED_Number := 0;

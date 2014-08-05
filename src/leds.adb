@@ -14,12 +14,12 @@ package body Leds is
  
    procedure On  (This : LED_Number) is
    begin
-      GPIOD.BSRR := Masks (This);
+      GPIOG.BSRR := Masks (This);
    end On;
  
    procedure Off (This : LED_Number) is
    begin
-      GPIOD.BSRR := Masks (This) * 2**16;
+      GPIOG.BSRR := Masks (This) * 2**16;
    end Off;
  
  
@@ -74,7 +74,7 @@ package body Leds is
    begin
       --  Enable clock for GPIO-D (leds) and GPIO-A (button)
  
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOD or RCC_AHB1ENR_GPIOA;
+      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOG or RCC_AHB1ENR_GPIOA;
  
       --  And for SYSCFGEN
  
@@ -84,10 +84,10 @@ package body Leds is
       declare
          use GPIO;
       begin
-         GPIOD.MODER   (12 .. 15) := (others => Mode_OUT);
-         GPIOD.OTYPER  (12 .. 15) := (others => Type_PP);
-         GPIOD.OSPEEDR (12 .. 15) := (others => Speed_100MHz);
-         GPIOD.PUPDR   (12 .. 15) := (others => No_Pull);
+         GPIOG.MODER   (12 .. 15) := (others => Mode_OUT);
+         GPIOG.OTYPER  (12 .. 15) := (others => Type_PP);
+         GPIOG.OSPEEDR (12 .. 15) := (others => Speed_100MHz);
+         GPIOG.PUPDR   (12 .. 15) := (others => No_Pull);
  
          GPIOA.MODER   (0) := Mode_IN;
          GPIOA.PUPDR   (0) := No_Pull;

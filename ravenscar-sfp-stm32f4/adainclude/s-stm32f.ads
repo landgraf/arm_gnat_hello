@@ -216,7 +216,8 @@ package System.STM32F4 is
    PWR : PWR_Registers with Volatile, Import,
                             Address => System'To_Address (PWR_Base);
 
-   PWR_CR_VOS_HIGH      : constant Word := 2**14; -- Core voltage set to high
+   PWR_CR_VOS_HIGH      : constant Word := 2**14 or 2**15;
+   --  Core voltage set to high
    PWR_CSR_VOSRDY       : constant Word := 2**14; -- Regulator output ready
 
    ---------------

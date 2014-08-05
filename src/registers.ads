@@ -5,12 +5,14 @@ pragma Warnings (On);
 package Registers is
  
    --  Bit definitions for RCC AHB1ENR register
-   RCC_AHB1ENR_GPIOD    : constant Word := 16#08#;
-   RCC_AHB1ENR_GPIOA    : constant Word := 16#01#;
+   RCC_AHB1ENR_GPIOD    : constant Word := 2**3;
+   RCC_AHB1ENR_GPIOG    : constant Word := 2**6; 
+   RCC_AHB1ENR_GPIOA    : constant Word := 2**0;
  
    RCC_APB2ENR_SYSCFGEN : constant Word := 16#4000#;
  
    GPIOD_Base           : constant := AHB1_Peripheral_Base + 16#0C00#;
+   GPIOG_Base           : constant := AHB1_Peripheral_Base + 16#1800#;
    GPIOA_Base           : constant := AHB1_Peripheral_Base + 16#0000#;
    SYSCFG_Base          : constant := APB2_Peripheral_Base + 16#3800#;
    EXTI_Base            : constant := APB2_Peripheral_Base + 16#3c00#;
@@ -20,6 +22,11 @@ package Registers is
      Address => System'To_Address (GPIOD_Base);
    pragma Import (Ada, GPIOD);
  
+   GPIOG : GPIO_Registers with
+     Volatile,
+     Address => System'To_Address (GPIOG_Base);
+   pragma Import (Ada, GPIOG);
+
    GPIOA : GPIO_Registers with
      Volatile,
      Address => System'To_Address (GPIOA_Base);

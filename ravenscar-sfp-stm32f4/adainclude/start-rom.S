@@ -27,7 +27,7 @@
 #############################################################################
 
 	.syntax unified
-	.cpu cortex-m3
+	.cpu cortex-m4
 	.thumb
 
 	/* This is the initial vector table and also the one that is used by

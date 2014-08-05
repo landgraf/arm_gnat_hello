@@ -178,12 +178,6 @@ procedure Setup_Pll is
 
       PWR.CR := PWR_CR_VOS_HIGH;
 
-      --  Wait until voltage supply scaling has completed
-
-      loop
-         exit when PWR.CSR and PWR_CSR_VOSRDY;
-      end loop;
-
       --  Setup internal clock and wait for HSI stabilisation.
       --  The internal high speed clock is always enabled, because it is the
       --  fallback clock when the PLL fails.
@@ -224,6 +218,13 @@ procedure Setup_Pll is
          loop
             exit when RCC.CR and RCC_CR.PLLRDY;
          end loop;
+
+         --  Wait until voltage supply scaling has completed
+         --  It must be done after PLL is ON
+         loop
+            exit when PWR.CSR and PWR_CSR_VOSRDY;
+         end loop;
+
       end if;
 
       --  Configure flash
