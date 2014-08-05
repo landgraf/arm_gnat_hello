@@ -115,6 +115,8 @@ package System.STM32F4 is
       PLLRDY     : constant Word := 2**25; -- Main PLL ready
       PLLI2SON   : constant Word := 2**26; -- Main PLL enable
       PLLI2SRDY  : constant Word := 2**27; -- Main PLL ready
+      PLLSAION   : constant Word := 2**28; -- Main PLL enable
+      PLLSAIRDY  : constant Word := 2**29; -- Main PLL ready
    end RCC_CR;
 
    PLLSRC_HSE      : constant := 2**22; -- PLL source clock is HSE

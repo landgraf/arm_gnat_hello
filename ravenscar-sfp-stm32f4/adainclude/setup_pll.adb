@@ -65,10 +65,12 @@ procedure Setup_Pll is
 
    Activate_PLL    : constant Boolean := True;
    Activate_PLLI2S : constant Boolean := False;
+   Activate_PLLSAI : constant Boolean := True;
 
    pragma Assert ((if Activate_PLL then HSE_Enabled),
                   "PLL only supported with external clock");
    pragma Assert (not Activate_PLLI2S, "not yet implemented");
+   pragma Assert (not Activate_PLLSAI, "not yet implemented");
 
    -------------------------------
    -- Compute Clock Frequencies --
