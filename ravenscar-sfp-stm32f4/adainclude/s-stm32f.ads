@@ -115,8 +115,6 @@ package System.STM32F4 is
       PLLRDY     : constant Word := 2**25; -- Main PLL ready
       PLLI2SON   : constant Word := 2**26; -- Main PLL enable
       PLLI2SRDY  : constant Word := 2**27; -- Main PLL ready
-      PLLSAION   : constant Word := 2**28; -- Main PLL enable
-      PLLSAIRDY  : constant Word := 2**29; -- Main PLL ready
    end RCC_CR;
 
    PLLSRC_HSE      : constant := 2**22; -- PLL source clock is HSE
@@ -218,8 +216,7 @@ package System.STM32F4 is
    PWR : PWR_Registers with Volatile, Import,
                             Address => System'To_Address (PWR_Base);
 
-   PWR_CR_VOS_HIGH      : constant Word := 2**14 or 2**15;
-   --  Core voltage set to high
+   PWR_CR_VOS_HIGH      : constant Word := 2**14; -- Core voltage set to high
    PWR_CSR_VOSRDY       : constant Word := 2**14; -- Regulator output ready
 
    ---------------
