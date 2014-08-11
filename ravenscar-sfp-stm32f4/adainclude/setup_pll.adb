@@ -65,7 +65,7 @@ procedure Setup_Pll is
 
    Activate_PLL    : constant Boolean := True;
    Activate_PLLI2S : constant Boolean := False;
-   Activate_PLLSAI : constant Boolean := True;
+   Activate_PLLSAI : constant Boolean := False;
 
    pragma Assert ((if Activate_PLL then HSE_Enabled),
                   "PLL only supported with external clock");
@@ -123,6 +123,7 @@ procedure Setup_Pll is
                  when others => raise Program_Error);
    pragma Unreferenced (PCLK1);
 
+   pragma Warnings (Off);
    PCLK2    : constant PCLK2_Range :=
                 (case PPRE2 is
                  when RCC_CFGR.PPRE2_DIV1  => HCLK / 1,
@@ -132,6 +133,7 @@ procedure Setup_Pll is
                  when RCC_CFGR.PPRE2_DIV16 => HCLK / 16,
                  when others => raise Program_Error);
 
+   pragma Warnings (On);
    --  Local Subprograms
 
    function "and" (Left, Right : Word) return Boolean is
@@ -140,7 +142,6 @@ procedure Setup_Pll is
    procedure Reset (Register : in out Word; Mask : Word);
    procedure Set (Register : in out Word; Mask : Word);
 
-   procedure Initialize_USART1 (Baudrate : Positive);
    procedure Initialize_Clocks;
    procedure Reset_Clocks;
 
@@ -282,37 +283,7 @@ procedure Setup_Pll is
       RCC.CIR := 0;
    end Reset_Clocks;
 
-   -----------------------
-   -- Initialize_USART1 --
-   -----------------------
-
-   procedure Initialize_USART1 (Baudrate : Positive) is
-      use GPIO;
-      APB_Clock    : constant Positive := PCLK2;
-      Int_Divider  : constant Positive := (25 * APB_Clock) / (4 * Baudrate);
-      Frac_Divider : constant Natural := Int_Divider rem 100;
-      BRR          : Bits_16;
-   begin
-      RCC.APB2ENR := RCC.APB2ENR or RCC_APB2ENR_USART1;
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOB;
-
-      GPIOB.MODER   (6 .. 7) := (Mode_AF,     Mode_AF);
-      GPIOB.OSPEEDR (6 .. 7) := (Speed_50MHz, Speed_50MHz);
-      GPIOB.OTYPER  (6 .. 7) := (Type_PP,     Type_PP);
-      GPIOB.PUPDR   (6 .. 7) := (Pull_Up,     Pull_Up);
-      GPIOB.AFRL    (6 .. 7) := (AF_USART1,   AF_USART1);
-
-      BRR := (Bits_16 (Frac_Divider * 16) + 50) / 100 mod 16
-               or Bits_16 (Int_Divider / 100 * 16);
-
-      USART1.BRR := BRR;
-      USART1.CR1 := USART.CR1_UE or USART.CR1_RE or USART.CR1_TE;
-      USART1.CR2 := 0;
-      USART1.CR3 := 0;
-   end Initialize_USART1;
-
 begin
    Reset_Clocks;
    Initialize_Clocks;
-   Initialize_USART1 (115_200);
 end Setup_Pll;
