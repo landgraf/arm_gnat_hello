@@ -5,6 +5,8 @@ with Registers;      use Registers;
  
 pragma Warnings (Off);
 with System.STM32F4; use System.STM32F4;
+with System.Stm32f4.RCC; use System.Stm32f4.RCC;
+
 pragma Warnings (On);
  
 package body Leds is
@@ -74,11 +76,11 @@ package body Leds is
    begin
       --  Enable clock for GPIO-D (leds) and GPIO-A (button)
  
-      RCC.AHB1ENR := RCC.AHB1ENR or RCC_AHB1ENR_GPIOG or RCC_AHB1ENR_GPIOA;
+      System.Stm32f4.Rcc.Registers.AHB1ENR := System.Stm32f4.Rcc.Registers.AHB1ENR or RCC_AHB1ENR_GPIOG or RCC_AHB1ENR_GPIOA;
  
       --  And for SYSCFGEN
  
-      RCC.APB2ENR := RCC.APB2ENR or RCC_APB2ENR_SYSCFGEN;
+      System.Stm32f4.Rcc.Registers.APB2ENR := System.Stm32f4.Rcc.Registers.APB2ENR or RCC_APB2ENR_SYSCFGEN;
  
       --  Configure PD12-15 (leds) and PA0 (Button)
       declare

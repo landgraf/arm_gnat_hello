@@ -1,16 +1,12 @@
-
-all: cleanrts cleanmain buildmain
+BUILDER ?= gprbuild -p
+all: cleanmain buildmain
 	arm-eabi-objcopy -O binary obj/main obj/main.bin
 
 cleanmain:
 	gprclean -P hello
 
-buildmain: buildrts
-	gprbuild -P hello -p
+buildmain:
+	${BUILDER} -P hello
 
-cleanrts:
-	gprclean -P ravenscar-sfp-stm32f4/runtime_build
 
-buildrts:
-	gprbuild -P ravenscar-sfp-stm32f4/runtime_build -XBUILD=Debug
-	
+
