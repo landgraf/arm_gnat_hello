@@ -61,4 +61,73 @@ package Registers is
      Address => System'To_Address (SYSCFG_Base);
    pragma Import (Ada, SYSCFG);
  
+
+   package SPI is
+      -- SPI_CR1
+      Cpha     : constant Bits_16 := 2**0;
+      Cpol     : constant Bits_16 := 2**1;
+      Mstr     : constant Bits_16 := 2**2;
+      Br0      : constant Bits_16 := 2**3;
+      Br1      : constant Bits_16 := 2**4;
+      Br2      : constant Bits_16 := 2**5;
+      Spe      : constant Bits_16 := 2**6;
+      Lsbfirst : constant Bits_16 := 2**7;
+      Ssi      : constant Bits_16 := 2**8;
+      Ssm      : constant Bits_16 := 2**9;
+      Rxonly   : constant Bits_16 := 2**10;
+      Dff      : constant Bits_16 := 2**11;
+      Crcnext  : constant Bits_16 := 2**12;
+      Crcen    : constant Bits_16 := 2**13;
+      Bidioe   : constant Bits_16 := 2**14;
+      Bidimode : constant Bits_16 := 2**15;
+      
+      -- SPI_CR2
+      Rxdmaen : constant Bits_16 := 2**0;
+      Txdmaen : constant Bits_16 := 2**1;
+      Ssoe    : constant Bits_16 := 2**2;
+      Frf     : constant Bits_16 := 2**4;
+      Errie   : constant Bits_16 := 2**5;
+      Rxneie  : constant Bits_16 := 2**6;
+      Txeie   : constant Bits_16 := 2**7;
+      
+      -- SPI_SR
+      Rxne   : constant Bits_16 := 2**0;
+      Txe    : constant Bits_16 := 2**1;
+      Chside : constant Bits_16 := 2**2;
+      Udr    : constant Bits_16 := 2**3;
+      Crcerr : constant Bits_16 := 2**4;
+      Modf   : constant Bits_16 := 2**5;
+      Ovr    : constant Bits_16 := 2**6;
+      Bsy    : constant Bits_16 := 2**7;
+      Fre    : constant Bits_16 := 2**8;
+      --
+      
+   end SPI;
+   
+   
+
+   type SPI_Registers is record
+      Reserved_0  : Bits_16;
+      Spi_Cr1     : Bits_16;
+      Reserved_1  : Bits_16;
+      Spi_Cr2     : Bits_16;
+      Reserved_2  : Bits_16;
+      Spi_sr      : Bits_16;
+      Reserved_3  : Bits_16;
+      Spi_Dr      : Bits_16;
+      Reserved_4  : Bits_16;
+      Spi_Crcpr   : Bits_16;
+      Reserved_5  : Bits_16;
+      Spi_Rxcrcpr : Bits_16;
+      Reserved_6  : Bits_16;
+      Spi_I2scfgr : Bits_16;
+      Reserved_7  : Bits_16;
+      Spi_I2cpr   : Bits_16;
+   end record with Pack;
+
+   SPI1 : SPI_Registers with Volatile, 
+     Address => System'To_Address (16#4001_33FF#);
+   SPI4 : Spi_Registers with Volatile,
+     Address => System'To_Address (16#4001_3400#);
+   
 end Registers;

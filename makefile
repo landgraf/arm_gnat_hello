@@ -1,9 +1,14 @@
+COMPILER_DIR = /opt/gnatarm/bin
+PATH := ${COMPILER_DIR}:${PATH}
+
 BUILDER ?= gprbuild -p
+CLEANER ?= gprclean 
+
 all: cleanmain buildmain
-	arm-eabi-objcopy -O binary obj/main obj/main.bin
+	${COMPILER_DIR}/arm-eabi-objcopy -O binary obj/main obj/main.bin
 
 cleanmain:
-	gprclean -P hello
+	${CLEANER} -P hello
 
 buildmain:
 	${BUILDER} -P hello
